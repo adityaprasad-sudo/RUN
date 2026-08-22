@@ -5,9 +5,9 @@ export default function HomeScreen() {
     <View style={styles.container}>
 
       <LinearGradient
-        colors={['#4c669f', '#3b5998', '#192f6a']}
+        colors={['#fcfcfc','#e6b08f']}
         start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
+        end={{ x: 2, y: 1 }}
         style={styles.background}
       >
         
