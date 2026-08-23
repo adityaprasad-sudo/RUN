@@ -1,9 +1,18 @@
-
+import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
-import { StyleSheet, Text, View } from 'react-native';
+import { useEffect, useRef } from 'react';
+import { Animated, StyleSheet, Text, View } from 'react-native';
 export default function HomeScreen() {
+  const downani = useRef(new Animated.Value(-250)).current;
+  useEffect(() => {
+    Animated.spring(downani, {
+      toValue: 0,
+      friction: 6,
+      tension: 20,
+      useNativeDriver: true,
+    }).start();
+  }, [downani]);
   return (
-    
     <View style={styles.container}>
       
 
@@ -15,7 +24,7 @@ export default function HomeScreen() {
         end={{ x: 2, y: 1 }}
         style={styles.background}
       >
-      <View style={styles.upperrect}>
+      <Animated.View style={[styles.upperrect, { transform: [{ translateY: downani }] }]}>
         <LinearGradient
         colors={['#EFF0EB','#E0DACC']}
         start={{ x: 0, y: 0 }}
@@ -29,7 +38,19 @@ export default function HomeScreen() {
 </View>
       </LinearGradient>
       
-      </View>
+      </Animated.View>
+      <LinearGradient
+        colors={['#fcfcfc','#D3CDB5']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 0.34}}
+        style={styles.lowerrect}
+      >
+      <BlurView intensity={60} tint="light" style={styles.lowerrect}>
+
+      </BlurView>
+
+      </LinearGradient>
+      
       </LinearGradient>
       
     </View>
@@ -46,8 +67,8 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 170,
     backgroundColor: '#ffffff',
-    borderBottomRightRadius: 80,
-     borderBottomLeftRadius: 80,
+    borderBottomRightRadius: 40,
+     borderBottomLeftRadius: 40,
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
     boxShadow: '0px 10px 15px rgba(0, 0, 0, 0.08)',
@@ -79,10 +100,10 @@ const styles = StyleSheet.create({
   justifyContent: 'center',
   
 
-  shadowColor: '#000',
-  shadowOffset: { width: 0, height: 4 },
-  shadowOpacity: 0.15,
-  shadowRadius: 10,
+  shadowColor: '#000000',
+  shadowOffset: { width: 0, height: 100},
+  shadowOpacity: 1,
+  shadowRadius: 200,
   elevation: 5,
 },
 profileImage: {
@@ -94,6 +115,27 @@ profileImage: {
   borderColor: '#FFFFFF',
   alignItems: 'center',
   justifyContent: 'center',
+},
+lowerrect: {
+  position: 'absolute',
+  bottom: -1,
+  overflow: 'hidden',
+  flex: 1,
+  width: '101%',
+  height: 100,
+  zIndex: 1,
+  shadowColor: '#000000',
+  shadowOffset: { width: 0, height: 100},
+  shadowOpacity: 1,
+  shadowRadius: 200,
+  
+  
+  alignSelf: 'center',
+  justifyContent: 'flex-end',
+  borderRadius: 40,
+  borderBottomLeftRadius: 0,
+  borderBottomRightRadius: 0,
+
 }
 
 });
