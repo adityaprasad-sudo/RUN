@@ -1,7 +1,36 @@
+import { Ionicons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
+import * as haptics from 'expo-haptics';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useRef } from 'react';
-import { Animated, StyleSheet, Text, View } from 'react-native';
+import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
+function Bouncy({name, size = 30, color = '#92876a', onPress}:any) {
+  const scale = useRef(new Animated.Value(1)).current;
+  const pressing = () => {
+    haptics.impactAsync(haptics.ImpactFeedbackStyle.Light);
+    Animated.spring(scale, {
+      toValue: 0.82,
+      speed: 50,
+      bounciness: 0,
+      useNativeDriver: true,
+    }).start();
+  }
+  const releasing = () => {
+    Animated.spring(scale, {
+      toValue: 1,
+      friction: 3,
+      tension: 140,
+      useNativeDriver: true,
+    }).start();
+  }
+  return (
+    <Pressable onPressIn={pressing} onPressOut={releasing} onPress={onPress}>
+      <Animated.View style={{ transform: [{ scale }] }}>
+        <Ionicons name={name} size={size} color={color} />
+      </Animated.View>
+    </Pressable>
+  );
+}
 export default function HomeScreen() {
   const downani = useRef(new Animated.Value(-250)).current;
   useEffect(() => {
@@ -12,6 +41,15 @@ export default function HomeScreen() {
       useNativeDriver: true,
     }).start();
   }, [downani]);
+  const upani = useRef(new Animated.Value(250)).current;
+  useEffect(() => {
+    Animated.spring(upani, {
+      toValue: 0,
+      friction: 6,
+      tension: 20,
+      useNativeDriver: true,
+    }).start();
+  }, [upani]);
   return (
     <View style={styles.container}>
       
@@ -20,37 +58,42 @@ export default function HomeScreen() {
 
       <LinearGradient
         colors={['#fcfcfc','#D3CDB5']}
-        start={{ x: -1, y: 0 }}
-        end={{ x: 2, y: 1 }}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
         style={styles.background}
       >
       <Animated.View style={[styles.upperrect, { transform: [{ translateY: downani }] }]}>
         <LinearGradient
-        colors={['#EFF0EB','#E0DACC']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0.5 }}
+        colors={['#E0DACC','#fcfcfc']}
+        start={{ x: 0, y: 0}}
+        end={{ x: 0, y: 1}}
         style={styles.upperrect}
-      ><Text style={styles.name}>Chigga Nigga</Text><Text style={styles.subtitle}>RUN!</Text>
+      ><Text style={styles.name}>Welcome Back</Text><Text style={styles.subtitle}>Chigga!</Text>
       <View style={styles.profileCrater}>
   <View style={styles.profileImage}>
-    
+    <Ionicons name="person-circle-outline" size={40} color="white" />
   </View>
 </View>
       </LinearGradient>
       
       </Animated.View>
+      <Animated.View style={[styles.lowerrect, { transform: [{ translateY: upani }] }]}>
       <LinearGradient
         colors={['#fcfcfc','#D3CDB5']}
         start={{ x: 0, y: 0 }}
         end={{ x: 0, y: 0.34}}
         style={styles.lowerrect}
       >
-      <BlurView intensity={60} tint="light" style={styles.lowerrect}>
+      <BlurView intensity={60} tint="light" style={styles.navcunt}>
+        <Bouncy name="home"></Bouncy>
+        <Bouncy name="sparkles"></Bouncy>
+        <Bouncy name="navigate-circle-outline"></Bouncy>
+        <Bouncy name="settings"></Bouncy>
 
       </BlurView>
 
       </LinearGradient>
-      
+      </Animated.View>
       </LinearGradient>
       
     </View>
@@ -88,6 +131,24 @@ const styles = StyleSheet.create({
     marginLeft: '12%',
     fontFamily: 'system',
   },
+  navicon: {
+    fontSize: 30,
+    color: '#92876a',
+  },
+  navcunt: {
+    flex:1,
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    paddingBottom: 15,
+  },
+  navbtnpressed:{
+    fontSize: 10,
+    color: '#050505',
+    opacity: 0.6,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   profileCrater: {
   position: 'absolute',
   top: 65,
@@ -116,6 +177,13 @@ profileImage: {
   alignItems: 'center',
   justifyContent: 'center',
 },
+navbtn:{
+  width: 50,
+  height: 50,
+  backgroundColor: '#f5f2f000',
+  alignItems: 'center',
+  justifyContent: 'center',
+},
 lowerrect: {
   position: 'absolute',
   bottom: -1,
@@ -135,7 +203,6 @@ lowerrect: {
   borderRadius: 40,
   borderBottomLeftRadius: 0,
   borderBottomRightRadius: 0,
-
 }
 
 });
