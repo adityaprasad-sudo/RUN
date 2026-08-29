@@ -2,8 +2,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 import * as haptics from 'expo-haptics';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
+
+import Home from './home';
 function Bouncy({name, size = 30, color = '#92876a', onPress}:any) {
   const scale = useRef(new Animated.Value(1)).current;
   const pressing = () => {
@@ -31,7 +33,9 @@ function Bouncy({name, size = 30, color = '#92876a', onPress}:any) {
     </Pressable>
   );
 }
+
 export default function HomeScreen() {
+  const [active, setactive] = useState('home');
   const downani = useRef(new Animated.Value(-250)).current;
   useEffect(() => {
     Animated.spring(downani, {
@@ -52,10 +56,6 @@ export default function HomeScreen() {
   }, [upani]);
   return (
     <View style={styles.container}>
-      
-
-      
-
       <LinearGradient
         colors={['#fcfcfc','#D3CDB5']}
         start={{ x: 0, y: 0 }}
@@ -77,6 +77,7 @@ export default function HomeScreen() {
       </LinearGradient>
       
       </Animated.View>
+      <Home />
       <Animated.View style={[styles.lowerrect, { transform: [{ translateY: upani }] }]}>
       <LinearGradient
         colors={['#fcfcfc','#D3CDB5']}
@@ -85,10 +86,18 @@ export default function HomeScreen() {
         style={styles.lowerrect}
       >
       <BlurView intensity={60} tint="light" style={styles.navcunt}>
-        <Bouncy name="home"></Bouncy>
-        <Bouncy name="sparkles"></Bouncy>
-        <Bouncy name="navigate-circle-outline"></Bouncy>
-        <Bouncy name="settings"></Bouncy>
+        <Bouncy name={active === 'home' ? "home" : "home-outline"} 
+    color={active === 'home' ? "#3E3626" : "#92876a"}
+    onPress={() => setactive('home')}></Bouncy>
+        <Bouncy name={active === 'sparkles' ? "sparkles" : "sparkles-outline"} 
+    color={active === 'sparkles' ? "#3E3626" : "#92876a"}
+    onPress={() => setactive('sparkles')}></Bouncy>
+        <Bouncy name={active === 'navigate' ? "navigate-circle" : "navigate-circle-outline"} 
+    color={active === 'navigate' ? "#3E3626" : "#92876a"}
+    onPress={() => setactive('navigate')}></Bouncy>
+        <Bouncy name={active === 'settings' ? "settings" : "settings-outline"} 
+    color={active === 'settings' ? "#3E3626" : "#92876a"}
+    onPress={() => setactive('settings')}></Bouncy>
 
       </BlurView>
 
